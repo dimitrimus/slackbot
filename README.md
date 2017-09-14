@@ -1,2 +1,2 @@
 # slackbot
-Slack bot for Yandex.Disk backend team
+Tiny lib for making fun slack bots
