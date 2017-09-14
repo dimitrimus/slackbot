@@ -177,7 +177,6 @@ class SlackBot(object):
 
             def wrapper():
                 result = fn(datetime.datetime.now())
-                time.sleep(1)
                 if self._schedule_timers[timer_id].is_alive:
                     seconds = self._calculate_seconds_to_run(at_time)
                     self._schedule_timers[timer_id] = Timer(seconds, wrapper, ())
@@ -192,18 +191,19 @@ class SlackBot(object):
     @staticmethod
     def _calculate_seconds_to_run(schedule_time):
         now = datetime.datetime.now()
+        today_schedule_datetime = datetime.datetime(
+            year=now.year, month=now.month, day=now.day,
+            hour=schedule_time.hour, minute=schedule_time.minute, second=schedule_time.second,
+            microsecond=schedule_time.microsecond
+        )
 
-        today_schedule_datetime = datetime.datetime(year=now.year, month=now.month, day=now.day,
-                                                    hour=schedule_time.hour, minute=schedule_time.minute,
-                                                    microsecond=schedule_time.microsecond)
-
-        if today_schedule_datetime > now:
+        if (today_schedule_datetime - now).total_seconds() > 1:
             schedule_delta = today_schedule_datetime - now
         else:
             tomorrow_schedule_datetime = today_schedule_datetime + datetime.timedelta(days=1)
             schedule_delta = tomorrow_schedule_datetime - now
 
-        return schedule_delta.seconds
+        return int(schedule_delta.total_seconds())
 
     def _start_timers(self):
         for timer in self._schedule_timers.values():
