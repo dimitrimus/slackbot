@@ -2,8 +2,6 @@
 # -*- coding: utf-8
 
 import unittest
-
-import sys
 import datetime
 
 from ..slackbot import SlackBot
@@ -32,6 +30,7 @@ class TestSlackbotSuit(unittest.TestCase):
     def test_calculate_seconds_to_run(self):
         schedule_time = datetime.datetime.now() + datetime.timedelta(microseconds=500)
         self.assertEqual(SlackBot._calculate_seconds_to_run(schedule_time), 24 * 60 * 60)
+
 
 if __name__ == '__main__':
     unittest.main()
