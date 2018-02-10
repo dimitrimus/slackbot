@@ -51,7 +51,8 @@ class TelegramBot(AbstractBot):
 
             result = response['result']
             for item in result:
-                self._process_message(item['message'])
+                if 'message' in item:
+                    self._process_message(item['message'])
                 offset = item['update_id'] + 1
 
             sleep_interval = self._small_retry_interval_secs if result else self._large_retry_interval_secs
